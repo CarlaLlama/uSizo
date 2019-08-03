@@ -5,6 +5,8 @@ exports.handler = function(context, event, callback) {
     if(null === event.Body){
         callback("null", null);
     }
+    //upload picture
+    //get results from wolfram
 
     const messageText = event.Body;
     console.log("Initiating Message lookup: " + messageText);
@@ -16,3 +18,7 @@ exports.handler = function(context, event, callback) {
 
 
 };
+
+function uploadImage(){
+
+}
