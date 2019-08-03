@@ -15,10 +15,9 @@ exports.startScrape = (event, context) => {
     console.log(Buffer.from(topicToScrape, 'base64').toString());
 
     search(`Khan Academy ${topicToScrape}`, {
-        limit : 5,
+        limit : 10,
         type : "video"
     }).then(function(results){
-        console.log(results);
         results.forEach(result => {
             console.log(`Title: ${result.title} , link: ${result.link}`);
         });
