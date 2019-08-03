@@ -1,25 +1,34 @@
 const request = require('request');
 const storage = require('@google-cloud/storage')();
 
+/**
+ * Twilio Whatsapp Session Init
+ *
+ * @param {!Object} event Event payload.
+ * @param {!Object} context Metadata for the event.
+ */
 exports.handler = function(context, event, callback) {
-    twiml = new Twilio.twiml.MessagingResponse();
+    let twiml = new Twilio.twiml.MessagingResponse();
 
-    if(null === event.Body){
+    if(null === event){
         callback("null", null);
     }
-    console.log(JSON.stringify(event.Body));
-    //upload picture
+    console.log(JSON.stringify(event));
 
-    //get results from wolfram
-
-    const messageText = event.Body;
+    const messageText = event;
     console.log("Initiating Message lookup: " + messageText);
 
-    let numMedia = event.Body.numMedia;
+    if(event.NumMedia === "0"){
+        callback("null", null);
+    }
+
+    twiml.message("THANKS FOR THE MESSAGE.");
+
+    let numMedia = event.NumMedia;
     let imageName = Date.now() + '_name.jpg';
     numMedia.forEach(index => {
-        if (event.Body.hasOwnProperty(`MediaUrl${index.toString()}`)) {
-            let mediaURL = event.Body.get(`MediaUrl${index.toString()}`);
+        if (event.hasOwnProperty(`MediaUrl${index.toString()}`)) {
+            let mediaURL = event.get(`MediaUrl${index.toString()}`);
             console.log(`Begin upload image to Storage: ${mediaURL}, Image name: ${imageName}`);
             saveImageToStorage(mediaURL, 'usizo-image', imageName)
                 .then((outputText) => {
@@ -28,6 +37,8 @@ exports.handler = function(context, event, callback) {
                 })
         }
     });
+
+    callback(null, twiml);
 };
 
 function saveImageToStorage(attachmentUrl, bucketName, objectName) {
