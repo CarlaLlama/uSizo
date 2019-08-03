@@ -13,14 +13,19 @@ const bucketName = 'usizo-images';
  * @param {!Object} context Metadata for the event.
  */
 exports.onImageUploadToStorage = (event, context) => {
-    console.log(`Processing file: ${event.name}`);
+    console.log(`Processing file: ${event.name}`);q
 
     // Path to uploaded image is event.name
     const fileName = event.name;
-    readImage(fileName);
+    let result = readImage(fileName);
 
     const fullTextAnnotation = result.fullTextAnnotation;
-    console.log(fullTextAnnotation.text);
+    if(fullTextAnnotation.text ){
+        console.log(fullTextAnnotation.text);
+    } else {
+        console.log('No text found.');
+    }
+    return;
 
 };
 
@@ -29,5 +34,5 @@ async function readImage(fileName){
     const [result] = await client.documentTextDetection(
         `gs://${bucketName}/${fileName}`
     );
-
+    return result;
 }
