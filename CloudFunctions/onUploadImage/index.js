@@ -17,13 +17,17 @@ exports.onImageUploadToStorage = (event, context) => {
 
     // Path to uploaded image is event.name
     const fileName = event.name;
-
-    // Read a remote image as a text document
-    const [result] = await client.documentTextDetection(
-        `gs://${bucketName}/${fileName}`
-    );
+    readImage(fileName);
 
     const fullTextAnnotation = result.fullTextAnnotation;
     console.log(fullTextAnnotation.text);
 
 };
+
+async function readImage(fileName){
+    // Read a remote image as a text document
+    const [result] = await client.documentTextDetection(
+        `gs://${bucketName}/${fileName}`
+    );
+
+}
